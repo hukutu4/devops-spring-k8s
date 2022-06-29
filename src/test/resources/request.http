@@ -1,0 +1,57 @@
+### basic: get users
+// @no-cookie-jar
+GET https://localhost:8080/cards
+Authorization: Basic admin secret
+
+### anonymous: get users
+// @no-cookie-jar
+GET https://localhost:8080/cards
+
+### x509: get users
+// @no-cookie-jar
+GET https://server.local:8080/cards
+
+### anonymous: get token
+// @no-cookie-jar
+POST https://localhost:8080/users/login?username=admin&password=secret
+
+> {% client.global.set("token", response.body.token); %}
+
+### token: get users
+// @no-cookie-jar
+GET https://localhost:8080/cards
+X-Token: {{token}}
+
+### media: raw bytes
+// @no-cookie-jar
+POST https://localhost:8080/media/bytes
+Authorization: Basic admin secret
+Content-Type: image/png
+
+< ./logo.png
+
+> {% client.global.set("path", response.body.path); %}
+
+### media: multipart file
+// @no-cookie-jar
+POST https://localhost:8080/media/multipart
+Authorization: Basic admin secret
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="image.png"
+Content-Type: image/png
+
+< ./logo.png
+--WebAppBoundary--
+
+> {% client.global.set("path", response.body.path); %}
+
+### media: get file by name (custom service method)
+// @no-cookie-jar
+GET https://localhost:8080/media/files/{{path}}
+
+### media: get file by name (spring static resources)
+// @no-cookie-jar
+GET https://localhost:8080/{{path}}
+
