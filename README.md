@@ -1,4 +1,4 @@
-Для запросов с curl:
+Для запросов curl:
 
 ```shell
 curl --insecure -u admin:secret https://localhost:8080/cards
